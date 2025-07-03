@@ -1,0 +1,9 @@
+.btn-secondary:disabled {
+    background-color: lightblue;
+    border-color: lightblue;
+    cursor: not-allowed;
+}
+
+#positionAdjust[open] summary {
+    margin-bottom: 10px;
+}

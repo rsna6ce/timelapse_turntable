@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Timelapse Turntable</title>
+    <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Timelapse Turntable</h1>
+        <div class="card p-4">
+            <form id="controlForm">
+                <div class="mb-3">
+                    <label for="angle" class="form-label">Angle (deg)</label>
+                    <input type="number" class="form-control" id="angle" name="angle" min="-180" max="180" value="180">
+                </div>
+                <div class="mb-3">
+                    <label for="time" class="form-label">Time (HH:MM)</label>
+                    <input type="number" class="form-control" id="time_h" name="time_h" min="0" max="60" value="3"> :
+                    <input type="number" class="form-control" id="time_m" name="time_m" min="0" max="59" value="30" style="display:inline-block; width: 80px;">
+                </div>
+                <div class="mb-3">
+                    <label for="move_count" class="form-label">Move Count</label>
+                    <input type="number" class="form-control" id="move_count" name="move_count" min="1" value="2">
+                </div>
+                <button type="button" id="startBtn" class="btn btn-primary">Start</button>
+                <button type="button" id="stopBtn" class="btn btn-secondary" disabled>Stop</button>
+            </form>
+            <div class="mt-3">
+                <p>Started: <span id="started">-</span></p>
+                <p>Finish: <span id="finish">-</span></p>
+                <p>Progress (angle): <span id="progress_angle">-</span> / <progress id="progress_angle_bar" max="100" value="0"></progress></p>
+                <p>Progress (count): <span id="progress_count">-</span> / <progress id="progress_count_bar" max="100" value="0"></progress></p>
+            </div>
+            <details id="positionAdjust">
+                <summary>Position adjust</summary>
+                <div class="mt-3">
+                    <button type="button" id="moveLeftFast" class="btn btn-primary mx-1"><< Move Left</button>
+                    <button type="button" id="moveLeftSlow" class="btn btn-primary mx-1">< Move Left</button>
+                    <button type="button" id="moveRightSlow" class="btn btn-primary mx-1">Move Right ></button>
+                    <button type="button" id="moveRightFast" class="btn btn-primary mx-1">Move Right >></button>
+                </div>
+            </details>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
