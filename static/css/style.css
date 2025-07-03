@@ -7,3 +7,41 @@
 #positionAdjust[open] summary {
     margin-bottom: 10px;
 }
+
+.card {
+    width: 100%; /* デフォルトで100%に設定 */
+    margin: 0 auto; /* 中央揃え */
+    font-size: 18px; /* 基本的な文字サイズを指定 */
+}
+
+@media (min-width: 1280px) {
+    .card {
+        width: 50%; /* PCサイズ以上の場合に50%に戻す */
+        font-size: 20px; /* PCでは少し大きめに */
+    }
+}
+
+@media (max-width: 1080px) {
+    .card {
+        width: 100%; /* 非常に小さい画面では100% */
+        font-size: 110%; /* 小さい画面でも可読性を保つ */
+    }
+    * {
+        font-size: 110%;
+    }
+    .btn {
+        font-size: 110%;
+    }
+    .form-control {
+        font-size: 110%;
+    }
+}
+
+/* 入れ子カードのスタイル調整 */
+.card .card {
+    width: 100%; /* 親カードの幅に合わせる */
+    margin-top: 15px; /* ボタンとの余白 */
+    padding: 10px; /* 内側の余白 */
+    background-color: #ffffff; /* 背景を親と同色に */
+    border: 1px solid #ddd; /* 境界線を薄く */
+}

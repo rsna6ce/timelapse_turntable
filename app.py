@@ -1,8 +1,15 @@
 from flask import Flask, render_template, request, jsonify
+import json
 import time
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
+
+# config.json から設定を読み込む
+with open('config.json', 'r') as f:
+    config = json.load(f)
+max_rotation_speed = config['max_rotation_speed']
+min_rotation_speed = config['min_rotation_speed']
 
 # Simulated device state
 device_state = {
@@ -17,7 +24,7 @@ device_state = {
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', max_rotation_speed=max_rotation_speed, min_rotation_speed=min_rotation_speed)
 
 @app.route('/start', methods=['POST'])
 def start():
@@ -26,16 +33,21 @@ def start():
     time_h = int(data['time_h'])
     time_m = int(data['time_m'])
     move_count = int(data['move_count'])
-    total_time = timedelta(hours=time_h, minutes=time_m) * move_count
-    device_state.update({
-        'status': 'running',
-        'started': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-        'finish': (datetime.now() + total_time).strftime('%Y-%m-%d %H:%M:%S'),
-        'angle': angle,
-        'count': 0,
-        'total_angle': angle * move_count,
-        'move_count': move_count
-    })
+    total_time_minutes = (time_h * 60 + time_m) * move_count
+    total_angle = abs(angle) * move_count
+    rotation_speed = total_angle / total_time_minutes if total_time_minutes > 0 else 0
+
+    if min_rotation_speed <= rotation_speed <= max_rotation_speed:
+        total_time = timedelta(hours=time_h, minutes=time_m) * move_count
+        device_state.update({
+            'status': 'running',
+            'started': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'finish': (datetime.now() + total_time).strftime('%Y-%m-%d %H:%M:%S'),
+            'angle': angle,
+            'count': 0,
+            'total_angle': total_angle,
+            'move_count': move_count
+        })
     return '', 204
 
 @app.route('/stop', methods=['POST'])
@@ -54,7 +66,7 @@ def stop():
 @app.route('/status')
 def status():
     if device_state['status'] == 'running':
-        progress_angle = (device_state['count'] * device_state['angle'])
+        progress_angle = (device_state['count'] * abs(device_state['angle']))
         progress_count = (device_state['count'] / device_state['move_count']) * 100
         return jsonify({
             'status': 'running',

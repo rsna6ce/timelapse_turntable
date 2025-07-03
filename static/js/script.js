@@ -8,25 +8,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Start button
     startBtn.addEventListener('click', () => {
-        const angle = document.getElementById('angle').value;
-        const timeH = document.getElementById('time_h').value;
-        const timeM = document.getElementById('time_m').value;
-        const moveCount = document.getElementById('move_count').value;
-        fetch('/start', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ angle, time_h: timeH, time_m: timeM, move_count: moveCount })
-        }).then(() => pollStatus());
-        startBtn.disabled = true;
-        stopBtn.disabled = false;
+        const angle = Math.abs(parseInt(document.getElementById('angle').value));
+        const timeH = parseInt(document.getElementById('time_h').value);
+        const timeM = parseInt(document.getElementById('time_m').value);
+        const moveCount = parseInt(document.getElementById('move_count').value);
+        const totalTimeMinutes = (timeH * 60 + timeM) * moveCount;
+        const rotationSpeed = totalTimeMinutes > 0 ? (angle * moveCount) / totalTimeMinutes : 0;
+
+        if (minRotationSpeed <= rotationSpeed && rotationSpeed <= maxRotationSpeed) {
+            if (confirm('Would you like to start the operation?')) {
+                fetch('/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ angle, time_h: timeH, time_m: timeM, move_count: moveCount })
+                }).then(() => pollStatus());
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+            }
+        } else {
+            alert(`Rotation speed is out of the allowable range.\nMax rotation speed: ${maxRotationSpeed} degree/min\nMin rotation speed: ${minRotationSpeed} degree/min\nRotation speed: ${rotationSpeed.toFixed(2)} degree/min`);
+        }
     });
 
     // Stop button
     stopBtn.addEventListener('click', () => {
-        fetch('/stop', { method: 'POST' }).then(() => {
-            startBtn.disabled = false;
-            stopBtn.disabled = true;
-        });
+        if (confirm('Would you like to stop the operation?')) {
+            fetch('/stop', { method: 'POST' }).then(() => pollStatus());
+        }
     });
 
     // Position adjust buttons
@@ -65,11 +73,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('progress_angle_bar').value = data.progress_angle_percent || 0;
                 document.getElementById('progress_count').textContent = data.progress_count || '-';
                 document.getElementById('progress_count_bar').value = data.progress_count_percent || 0;
-                if (data.status === 'running') setTimeout(pollStatus, 1000);
-                else {
+                if (data.status === 'running') {
+                    startBtn.disabled = true;
+                    stopBtn.disabled = false;
+                } else {
                     startBtn.disabled = false;
                     stopBtn.disabled = true;
                 }
+                if (data.status === 'running') setTimeout(pollStatus, 1000);
             });
     }
 });
