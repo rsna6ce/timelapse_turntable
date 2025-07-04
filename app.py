@@ -1,15 +1,16 @@
 from flask import Flask, render_template, request, jsonify
 import json
-import time
 from datetime import datetime, timedelta
+import motor
 
 app = Flask(__name__)
 
 # config.json から設定を読み込む
 with open('config.json', 'r') as f:
     config = json.load(f)
-max_rotation_speed = config['max_rotation_speed']
-min_rotation_speed = config['min_rotation_speed']
+
+# MotorControllerに設定を渡して初期化
+motor.init(config)
 
 # Simulated device state
 device_state = {
@@ -24,7 +25,7 @@ device_state = {
 
 @app.route('/')
 def index():
-    return render_template('index.html', max_rotation_speed=max_rotation_speed, min_rotation_speed=min_rotation_speed)
+    return render_template('index.html', max_rotation_speed=config['max_rotation_speed'], min_rotation_speed=config['min_rotation_speed'])
 
 @app.route('/start', methods=['POST'])
 def start():
@@ -37,7 +38,7 @@ def start():
     total_angle = abs(angle) * move_count
     rotation_speed = total_angle / total_time_minutes if total_time_minutes > 0 else 0
 
-    if min_rotation_speed <= rotation_speed <= max_rotation_speed:
+    if config['min_rotation_speed'] <= rotation_speed <= config['max_rotation_speed']:
         total_time = timedelta(hours=time_h, minutes=time_m) * move_count
         device_state.update({
             'status': 'running',
@@ -48,6 +49,7 @@ def start():
             'total_angle': total_angle,
             'move_count': move_count
         })
+        motor.motor_controller.start()  # モーター開始
     return '', 204
 
 @app.route('/stop', methods=['POST'])
@@ -61,6 +63,7 @@ def stop():
         'total_angle': 0,
         'move_count': 0
     })
+    motor.motor_controller.stop()  # モーター停止
     return '', 204
 
 @app.route('/status')
@@ -82,13 +85,18 @@ def status():
 @app.route('/move_start', methods=['POST'])
 def move_start():
     data = request.get_json()
-    # Simulate move start (implement actual device control here)
+    speed = data['speed']  # 'fast' or 'slow'
+    direction = data['direction']  # 'L' or 'R'
+    motor.motor_controller.move_start(direction, speed)  # 方向と速度を指定
     return '', 204
 
 @app.route('/move_stop', methods=['POST'])
 def move_stop():
-    # Simulate move stop (implement actual device control here)
+    motor.motor_controller.move_stop()
     return '', 204
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    try:
+        app.run(host="0.0.0.0", port=5000, debug=True)
+    finally:
+        motor.motor_controller.cleanup()
