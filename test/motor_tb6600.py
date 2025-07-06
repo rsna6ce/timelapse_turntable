@@ -2,7 +2,6 @@
 
 import RPi.GPIO as GPIO
 import time
-import keyboard
 
 
 import inspect
@@ -16,6 +15,7 @@ def debug_print(variable):
             print(f"{name} : {variable}")
             return
     print(f"variable : {variable}")  # 名前が見つからない場合
+
 
 GPIO.setmode(GPIO.BOARD)
 PUL=8
@@ -34,6 +34,7 @@ ena_flag = 1
 
 #パルスの幅を指定。値を小さくする程高速で回転する。
 wid = 0.0005
+
 
 #回転角度を指定
 ang = 180

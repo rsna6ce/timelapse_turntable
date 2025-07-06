@@ -49,7 +49,7 @@ def start():
             'total_angle': total_angle,
             'move_count': move_count
         })
-        motor.motor_controller.start()  # モーター開始
+        motor.motor_controller.run_start()  # モーター開始
     return '', 204
 
 @app.route('/stop', methods=['POST'])
@@ -63,7 +63,7 @@ def stop():
         'total_angle': 0,
         'move_count': 0
     })
-    motor.motor_controller.stop()  # モーター停止
+    motor.motor_controller.run_stop()  # モーター停止
     return '', 204
 
 @app.route('/status')
