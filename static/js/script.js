@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ angle, time_h: timeH, time_m: timeM, move_count: moveCount })
-                }).then(() => pollStatus());
+                });
                 startBtn.disabled = true;
                 stopBtn.disabled = false;
             }
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Stop button
     stopBtn.addEventListener('click', () => {
         if (confirm('Would you like to stop the operation?')) {
-            fetch('/stop', { method: 'POST' }).then(() => pollStatus());
+            fetch('/stop', { method: 'POST' });
         }
     });
 

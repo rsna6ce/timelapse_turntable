@@ -34,11 +34,15 @@ def init(config):
             self.thread_move = None
             self.is_running = False
             self.is_moving = False
+            self.current_angle = 0
+            self.current_count = 0
 
         def run_start(self, angle, time_h, time_m, move_count):
             if self.state == 'stopped':
                 self.state = 'running'
                 self.is_running = True
+                self.current_angle = 0
+                self.current_count = 0
                 self.thread_run = threading.Thread(target=self._motor_thread_run, args=(angle, time_h, time_m, move_count))
                 self.thread_run.daemon = True
                 self.thread_run.start()
@@ -51,7 +55,7 @@ def init(config):
                     self.thread_run.join(timeout=1)
 
         def get_run_status(self):
-            return self.is_running
+            return self.is_running, self.current_angle, self.current_count
 
         def _motor_thread_run(self, angle, time_h, time_m, move_count):
             try:
@@ -88,6 +92,9 @@ def init(config):
                     count_curr += 1
                     pulse_count = 0
                     GPIO.output(self.pin_dir, dir_level if count_curr % 2 == 0 else (GPIO.LOW if dir_level == GPIO.HIGH else GPIO.HIGH))
+                # get status用
+                self.current_angle = abs(angle) * pulse_count / pulses_per_move if count_curr < move_count else abs(angle)
+                self.current_count = count_curr
 
             GPIO.output(self.pin_pul, GPIO.LOW)
             GPIO.output(self.pin_ena, GPIO.LOW)

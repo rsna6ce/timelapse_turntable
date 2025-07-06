@@ -80,18 +80,11 @@ def stop():
 @app.route('/status')
 def status():
     if device_state['started_time']:
-        # 経過時間から進捗計算
-        current_time = datetime.now()
-        elapsed_time = (current_time - device_state['started_time']).seconds
-        device_state['current_count'] = min(int(elapsed_time / device_state['once_time_sec']), device_state['move_count'])
-        if device_state['move_count'] > device_state['current_count']:
-            progress_sec = (elapsed_time - (device_state['current_count'] * device_state['once_time_sec']))
-            device_state['current_angle'] = min((progress_sec / device_state['once_time_sec'] * abs(device_state['angle'])), abs(device_state['angle']))
-        else:
-            device_state['current_angle'] = abs(device_state['angle'])
-
-        # 自動停止確認
-        if not motor.motor_controller.get_run_status():
+        # モーターステータス取得から進捗更新
+        is_running, current_angle, current_count = motor.motor_controller.get_run_status()
+        device_state['current_angle'] = current_angle
+        device_state['current_count'] = current_count
+        if not is_running:
             device_state['status'] = 'stopped'
 
     return jsonify({
