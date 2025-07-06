@@ -15,17 +15,26 @@ motor.init(config)
 # Simulated device state
 device_state = {
     'status': 'stopped',
+    'started_time': None,
     'started': None,
     'finish': None,
     'angle': 0,
-    'count': 0,
-    'total_angle': 0,
-    'move_count': 0
+    'current_angle':0,
+    'current_count': 0,
+    'once_time_sec':0,
+    'move_count': 0,
+    'latest_angle':180,
+    'latest_time_h':2,
+    'latest_time_m':0,
+    'latest_move_count':2,
 }
 
 @app.route('/')
 def index():
-    return render_template('index.html', max_rotation_speed=config['max_rotation_speed'], min_rotation_speed=config['min_rotation_speed'])
+    return render_template('index.html',
+        max_rotation_speed=config['max_rotation_speed'], min_rotation_speed=config['min_rotation_speed'],
+        latest_angle=device_state['latest_angle'], latest_move_count=device_state['latest_move_count'],
+        latest_time_h=device_state['latest_time_h'], latest_time_m=device_state['latest_time_m'])
 
 @app.route('/start', methods=['POST'])
 def start():
@@ -38,49 +47,62 @@ def start():
     total_angle = abs(angle) * move_count
     rotation_speed = total_angle / total_time_minutes if total_time_minutes > 0 else 0
 
+    print("angle:",angle)
+    device_state['latest_angle'] = angle
+    device_state['latest_time_h'] = time_h
+    device_state['latest_time_m'] = time_m
+    device_state['latest_move_count'] = move_count
+
     if config['min_rotation_speed'] <= rotation_speed <= config['max_rotation_speed']:
         total_time = timedelta(hours=time_h, minutes=time_m) * move_count
+        started_time = datetime.now()
         device_state.update({
             'status': 'running',
-            'started': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'finish': (datetime.now() + total_time).strftime('%Y-%m-%d %H:%M:%S'),
+            'started_time' : started_time,
+            'started': started_time.strftime('%Y-%m-%d %H:%M:%S'),
+            'finish': (started_time + total_time).strftime('%Y-%m-%d %H:%M:%S'),
             'angle': angle,
-            'count': 0,
-            'total_angle': total_angle,
+            'current_angle':0,
+            'current_count': 0,
+            'once_time_sec': (time_h*60 + time_m) + 60,
             'move_count': move_count
         })
-        motor.motor_controller.run_start()  # モーター開始
+        motor.motor_controller.run_start(angle, time_h, time_m, move_count)  # モーター開始
     return '', 204
 
 @app.route('/stop', methods=['POST'])
 def stop():
-    device_state.update({
-        'status': 'stopped',
-        'started': None,
-        'finish': None,
-        'angle': 0,
-        'count': 0,
-        'total_angle': 0,
-        'move_count': 0
-    })
+    device_state['status'] = 'stopped'
+    device_state['started_time'] = None
     motor.motor_controller.run_stop()  # モーター停止
     return '', 204
 
 @app.route('/status')
 def status():
-    if device_state['status'] == 'running':
-        progress_angle = (device_state['count'] * abs(device_state['angle']))
-        progress_count = (device_state['count'] / device_state['move_count']) * 100
-        return jsonify({
-            'status': 'running',
-            'started': device_state['started'],
-            'finish': device_state['finish'],
-            'progress_angle': f"{progress_angle} / {device_state['total_angle']}",
-            'progress_angle_percent': min((progress_angle / device_state['total_angle']) * 100, 100),
-            'progress_count': f"{device_state['count']} / {device_state['move_count']}",
-            'progress_count_percent': min(progress_count, 100)
-        })
-    return jsonify({'status': 'stopped'})
+    if device_state['started_time']:
+        # 経過時間から進捗計算
+        current_time = datetime.now()
+        elapsed_time = (current_time - device_state['started_time']).seconds
+        device_state['current_count'] = min(int(elapsed_time / device_state['once_time_sec']), device_state['move_count'])
+        if device_state['move_count'] > device_state['current_count']:
+            progress_sec = (elapsed_time - (device_state['current_count'] * device_state['once_time_sec']))
+            device_state['current_angle'] = min((progress_sec / device_state['once_time_sec'] * abs(device_state['angle'])), abs(device_state['angle']))
+        else:
+            device_state['current_angle'] = abs(device_state['angle'])
+
+        # 自動停止確認
+        if not motor.motor_controller.get_run_status():
+            device_state['status'] = 'stopped'
+
+    return jsonify({
+        'status': device_state['status'],
+        'started': device_state['started'],
+        'finish': device_state['finish'],
+        'progress_angle': f"{device_state['current_angle']:.2f} / {abs(device_state['angle'])}",
+        'progress_angle_percent': min((device_state['current_angle'] / abs(device_state['angle'])) * 100, 100),
+        'progress_count': f"{device_state['current_count']} / {device_state['move_count']}",
+        'progress_count_percent': min((device_state['current_count'] / device_state['move_count']) * 100, 100)
+    })
 
 @app.route('/move_start', methods=['POST'])
 def move_start():

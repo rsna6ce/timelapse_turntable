@@ -35,26 +35,64 @@ def init(config):
             self.is_running = False
             self.is_moving = False
 
-        def run_start(self):
-            if self.state == 'stopped' and self.config['min_rotation_speed'] <= 0 <= self.config['max_rotation_speed']:  # 簡単な検証
+        def run_start(self, angle, time_h, time_m, move_count):
+            if self.state == 'stopped':
                 self.state = 'running'
                 self.is_running = True
-                self.thread_run = threading.Thread(target=self._motor_thread_run)
+                self.thread_run = threading.Thread(target=self._motor_thread_run, args=(angle, time_h, time_m, move_count))
                 self.thread_run.daemon = True
                 self.thread_run.start()
-                GPIO.output(self.pin, GPIO.HIGH)
 
         def run_stop(self):
-            if self.state in ['running', 'moving']:
+            if self.state == 'running':
                 self.state = 'stopped'
                 self.is_running = False
                 if self.thread_run:
                     self.thread_run.join(timeout=1)
-                GPIO.output(self.pin, GPIO.LOW)
 
-        def _motor_thread_run(self):
-            while self.is_running:
-                time.sleep(0.1)  # 簡単なループ（実際は制御ロジック）
+        def get_run_status(self):
+            return self.is_running
+
+        def _motor_thread_run(self, angle, time_h, time_m, move_count):
+            try:
+                motor_driver_rate = float(self.config['motor_driver_rate'])
+                gear_ratio = float(self.config['gear_ratio'])
+                run_once_sec = (time_h * 60 + time_m) * 60
+                if run_once_sec <= 0 or move_count <= 0 or angle == 0:
+                    raise ValueError("time_h, time_m, move_count must be positive, angle must be non-zero")
+                speed_deg_per_min = abs(angle) / (time_h * 60 + time_m)
+                pulse_interval_sec = (360 * 60 / 200) / (speed_deg_per_min * gear_ratio * motor_driver_rate)
+                pulse_width_sec = max(0.000005, pulse_interval_sec / 2)  # デューティ比50%、最小5μs
+                pulses_per_move = int((abs(angle) * 200 * motor_driver_rate * gear_ratio) / 360)
+            except (KeyError, ValueError) as e:
+                print(f"設定エラー: {e}")
+                return
+
+            dir_level = GPIO.HIGH if angle >= 0 else GPIO.LOW
+            GPIO.output(self.pin_ena, GPIO.HIGH)
+            GPIO.output(self.pin_dir, dir_level)
+
+            started_time = time.perf_counter()
+            next_time = started_time + pulse_interval_sec
+            count_curr = 0
+            pulse_count = 0
+            while self.is_running and count_curr < move_count:
+                GPIO.output(self.pin_pul, GPIO.HIGH)
+                time.sleep(pulse_width_sec)
+                GPIO.output(self.pin_pul, GPIO.LOW)
+                time.sleep(max(0, next_time - time.perf_counter()))
+                next_time += pulse_interval_sec
+                pulse_count += 1
+                # 方向更新
+                if pulse_count >= pulses_per_move:
+                    count_curr += 1
+                    pulse_count = 0
+                    GPIO.output(self.pin_dir, dir_level if count_curr % 2 == 0 else (GPIO.LOW if dir_level == GPIO.HIGH else GPIO.HIGH))
+
+            GPIO.output(self.pin_pul, GPIO.LOW)
+            GPIO.output(self.pin_ena, GPIO.LOW)
+            self.state = 'stopped'
+            self.is_running = False
 
         def move_start(self, direction, speed):
             """
@@ -63,8 +101,7 @@ def init(config):
             """
             if self.state == 'stopped':
                 self.state = 'moving'
-                # 方向と速度に応じた制御（仮実装）
-                dir_level = GPIO.HIGH if direction == 'R' else GPIO.LOW
+                dir_level = GPIO.HIGH if direction == 'L' else GPIO.LOW
                 speed_deg_per_min = self.config['move_rotation_speed_{}'.format(speed)]
                 self.is_moving = True
                 self.thread_move = threading.Thread(target=self._motor_thread_move, args=(dir_level, speed_deg_per_min))
@@ -100,7 +137,7 @@ def init(config):
             GPIO.output(self.pin_ena, GPIO.LOW)
 
         def cleanup(self):
-            self.stop()
+            self.run_stop()
             GPIO.cleanup()
 
     motor_controller = MotorController(config)
