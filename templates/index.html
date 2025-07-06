@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
     <title>Timelapse Turntable</title>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -24,9 +25,9 @@
                 <div class="mb-3">
                     <label for="time" class="form-label">Time (HH:MM)</label><br>
                     <div class="input-group" style="display: inline-flex; align-items: center; width:50%;">
-                        <input type="number" class="form-control" id="time_h" name="time_h" min="0" max="60" value="{{latest_time_h}}" style="width: 80px;">
+                        <input type="number" class="form-control" id="time_h" name="time_h" min="0" max="60" value="{{latest_time_h}}" style="width: 50px;">
                         <span class="mx-1" style="line-height: 1.5;">:</span>
-                        <input type="number" class="form-control" id="time_m" name="time_m" min="0" max="59" value="{{latest_time_m}}" style="width: 80px;">
+                        <input type="number" class="form-control" id="time_m" name="time_m" min="0" max="59" value="{{latest_time_m}}" style="width: 50px;">
                     </div>
                 </div>
                 <div class="mb-3">

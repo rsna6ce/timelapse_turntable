@@ -21,22 +21,6 @@
     }
 }
 
-@media (max-width: 1080px) {
-    .card {
-        width: 100%; /* 非常に小さい画面では100% */
-        font-size: 110%; /* 小さい画面でも可読性を保つ */
-    }
-    * {
-        font-size: 110%;
-    }
-    .btn {
-        font-size: 110%;
-    }
-    .form-control {
-        font-size: 110%;
-    }
-}
-
 /* 入れ子カードのスタイル調整 */
 .card .card {
     width: 100%; /* 親カードの幅に合わせる */
