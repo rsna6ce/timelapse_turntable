@@ -67,6 +67,142 @@ doremi_test= [
 (tone_do4, len3),
 ]
 
+spd_i=1.0
+iphone = [
+(tone_so1, len2/spd_i),#ソー
+(tone_so1, len1/spd_i),#ソ
+(tone_ra1*tone_sharp, len1/spd_i),#シb
+(tone_do2, len1/spd_i),#ド
+(tone_do2, len1/spd_i/2),#ド
+(tone_ra1*tone_sharp, len1/spd_i/2),#シb
+(tone_so1, len1/spd_i),#ソ
+(tone_do2, len1/spd_i),#ド
+(tone_fa1, len1/spd_i),#ファ
+(tone_do2, len1/spd_i),#ド
+(tone_ra1*tone_sharp, len1/spd_i),#シb
+(tone_do2, len1/spd_i),#ド
+(tone_fa1, len2/spd_i),#ファ
+(0, len2/spd_i),
+]
+iphone.extend(iphone)
+
+spt_t = 1.0
+tetorisu = [
+(tone_mi2, len2/spt_t),#ミー
+(tone_si1, len1/spt_t),#シ
+(tone_do2, len1/spt_t),#ド
+(tone_re2, len2/spt_t),#レー
+(tone_do2, len1/spt_t),#ド
+(tone_si1, len1/spt_t),#シ
+(tone_ra1, len2/spt_t),#ラー
+(tone_ra1, len1/spt_t),#ラ
+(tone_do2, len1/spt_t),#ド
+(tone_mi2, len2/spt_t),#ミー
+(tone_re2, len1/spt_t),#レ
+(tone_do2, len1/spt_t),#ド
+(tone_si1, len2/spt_t),#シー
+(tone_si1, len1/spt_t),#シ
+(tone_do2, len1/spt_t),#ド
+(tone_re2, len2/spt_t),#レー
+(tone_mi2, len2/spt_t),#ミー
+(tone_do2, len2/spt_t),#ドー
+(tone_ra1, len2/spt_t),#ラー
+(tone_ra1, len3/spt_t),#ラー
+(0, len1/spt_t),
+(tone_re2, len2/spt_t),#レー
+(tone_fa2, len1/spt_t),#ファ
+(tone_ra2, len2/spt_t),#ラー
+(tone_so2, len1/spt_t),#ソ
+(tone_fa2, len1/spt_t),#ファ
+(tone_mi2, len3/spt_t),#ミー
+(tone_do2, len1/spt_t),#ド
+(tone_mi2, len2/spt_t),#ミー
+(tone_re2, len1/spt_t),#レ
+(tone_do2, len1/spt_t),#ド
+(tone_si1, len2/spt_t),#シー
+(tone_si1, len1/spt_t),#シ
+(tone_do2, len1/spt_t),#ド
+(tone_re2, len2/spt_t),#レー
+(tone_mi2, len2/spt_t),#ミー
+(tone_do2, len2/spt_t),#ドー
+(tone_ra1, len2/spt_t),#ラー
+(tone_ra1, len2/spt_t),#ラー
+]
+
+
+spd_y = 1.0
+yobikomikun = [
+(tone_ra2, len1/spd_y),#ラ
+(tone_ra2, len2/spd_y),#ラー
+(tone_si2, len1/spd_y),#シ
+(tone_ra2, len1/spd_y),#ラ
+(tone_fa2*tone_sharp, len1/spd_y),#ファ#
+(tone_ra2, len1/spd_y),#ラ
+(0, len1/spd_y),
+(tone_ra2, len1/spd_y),#ラ
+(tone_ra2, len2/spd_y),#ラー
+(tone_si2, len1/spd_y),#シ
+(tone_ra2, len1/spd_y),#ラ
+(tone_fa2*tone_sharp, len1/spd_y),#ファ#
+(tone_ra2, len1/spd_y),#ラ
+(0, len1/spd_y),
+(tone_re2, len1/spd_y),#レ
+(tone_re2, len1/spd_y),#レ
+(tone_re2, len1/spd_y),#レ
+(tone_mi2, len1/spd_y),#ミ
+(tone_fa2*tone_sharp, len3/spd_y),#ファ#ー
+(tone_re2, len1/spd_y),#レ
+(tone_fa2*tone_sharp, len3/spd_y),#ファ#ー
+(tone_ra2, len1/spd_y),##ラ
+(tone_ra2, len3/spd_y),##ラー
+(0, len1/spd_y),
+(tone_re2, len1/spd_y),#レ
+(tone_re2, len1/spd_y),#レ
+(tone_re2, len1/spd_y),#レ
+(tone_mi2, len1/spd_y),#ミ
+(tone_fa2*tone_sharp, len4/spd_y),#ファ#ー
+(0, len1/spd_y/16),
+(tone_re2, len1/spd_y),#レ
+(tone_re2, len1/spd_y),#レ
+(tone_re2, len1/spd_y),#レ
+(tone_mi2, len1/spd_y),#ミ
+(tone_fa2*tone_sharp, len3/spd_y),#ファ#ー
+(0, len1/spd_y),
+(tone_mi2, len1/spd_y),#ミ
+(tone_mi2, len1/spd_y),#ミ
+(tone_mi2, len1/spd_y),#ミ
+(tone_re2, len1/spd_y),#レ
+(tone_mi2, len2/spd_y),#ミー
+(tone_fa2*tone_sharp, len2/spd_y),#ファ#ー
+(tone_ra2, len2/spd_y),#ラー
+(tone_so2, len2/spd_y),#ソー
+(tone_fa2*tone_sharp, len2/spd_y),#ファ#ー
+(tone_mi2, len2/spd_y),#ミー
+(0, len1/spd_y),
+]
+yobikomikun.extend(yobikomikun)
+
+
+
+spd_f = 0.8
+famima = [
+(tone_so2, len1/spd_f),#ソ
+(tone_re2*tone_sharp, len1/spd_f),#ミb
+(tone_re1*tone_sharp, len1/spd_f),#シb
+(tone_re2*tone_sharp, len1/spd_f),#ミb
+(tone_fa2, len1/spd_f),#ファ
+(tone_re3*tone_sharp, len3/spd_f),#シbー
+(0, len1/spd_f/3),
+(tone_fa1, len1/spd_f),#ファ
+(tone_fa2, len1/spd_f),#ファ
+(tone_so2, len1/spd_f),#ソ
+(tone_fa2, len1/spd_f),#ファ
+(tone_ra1*tone_sharp, len1/spd_f),#シb
+(tone_re2*tone_sharp, len2/spd_f),#ミb
+(0, len1/spd_f),
+]
+famima.extend(famima)
+
 spd_j = 1.0
 jidai = [
 (tone_do2*tone_sharp, len1/spd_j),#レb
@@ -148,5 +284,9 @@ def play_sound_with_beep_server(sounds, delay):
 
 
 #play_sound_with_beep_server(mario_oneup, len0)
-play_sound_with_beep_server(jidai, len0)
+#play_sound_with_beep_server(jidai, len0)
+#play_sound_with_beep_server(famima, len0)
+play_sound_with_beep_server(yobikomikun, len0)
+#play_sound_with_beep_server(tetorisu, len0)
+#play_sound_with_beep_server(iphone, len0)
 #play_sound_with_beep_server(doremi_test, len0)
