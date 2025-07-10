@@ -66,7 +66,7 @@ def init(config):
                     raise ValueError("time_h, time_m, move_count must be positive, angle must be non-zero")
                 speed_deg_per_min = abs(angle) / (time_h * 60 + time_m)
                 pulse_interval_sec = (360 * 60 / 200) / (speed_deg_per_min * gear_ratio * motor_driver_rate)
-                pulse_width_sec = max(0.000005, pulse_interval_sec / 2)  # デューティ比50%、最小5μs
+                pulse_width_sec = max(0.000005, min(0.1, pulse_interval_sec / 2))  # デューティ比50%、最小5μs、最大100ms
                 pulses_per_move = int((abs(angle) * 200 * motor_driver_rate * gear_ratio) / 360)
             except (KeyError, ValueError) as e:
                 print(f"設定エラー: {e}")
