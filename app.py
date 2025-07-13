@@ -94,14 +94,17 @@ def status():
         if not is_running:
             device_state['status'] = 'stopped'
 
+    progress_angle_percent = 0 if device_state['angle']==0 else min((device_state['current_angle'] / abs(device_state['angle'])) * 100, 100)
+    progress_count_percent = 0 if device_state['move_count'] == 0 else min((device_state['current_count'] / device_state['move_count']) * 100, 100)
+
     return jsonify({
         'status': device_state['status'],
         'started': device_state['started'],
         'finish': device_state['finish'],
         'progress_angle': f"{device_state['current_angle']:.2f} / {abs(device_state['angle'])}",
-        'progress_angle_percent': min((device_state['current_angle'] / abs(device_state['angle'])) * 100, 100),
+        'progress_angle_percent': progress_angle_percent,
         'progress_count': f"{device_state['current_count']} / {device_state['move_count']}",
-        'progress_count_percent': min((device_state['current_count'] / device_state['move_count']) * 100, 100)
+        'progress_count_percent': progress_count_percent,
     })
 
 @app.route('/move_start', methods=['POST'])
