@@ -4,6 +4,8 @@ import time
 
 import inspect
 import sys
+import sound
+
 def debug_print(variable):
     # 呼び出し元のフレームを取得
     frame = inspect.currentframe().f_back
@@ -37,13 +39,13 @@ def init(config):
             self.current_angle = 0
             self.current_count = 0
 
-        def run_start(self, angle, time_h, time_m, move_count):
+        def run_start(self, angle, time_h, time_m, move_count, mute):
             if self.state == 'stopped':
                 self.state = 'running'
                 self.is_running = True
                 self.current_angle = 0
                 self.current_count = 0
-                self.thread_run = threading.Thread(target=self._motor_thread_run, args=(angle, time_h, time_m, move_count))
+                self.thread_run = threading.Thread(target=self._motor_thread_run, args=(angle, time_h, time_m, move_count, mute))
                 self.thread_run.daemon = True
                 self.thread_run.start()
 
@@ -57,7 +59,7 @@ def init(config):
         def get_run_status(self):
             return self.is_running, self.current_angle, self.current_count
 
-        def _motor_thread_run(self, angle, time_h, time_m, move_count):
+        def _motor_thread_run(self, angle, time_h, time_m, move_count, mute):
             try:
                 motor_driver_rate = float(self.config['motor_driver_rate'])
                 gear_ratio = float(self.config['gear_ratio'])
@@ -71,6 +73,9 @@ def init(config):
             except (KeyError, ValueError) as e:
                 print(f"設定エラー: {e}")
                 return
+
+            if not mute:
+                sound.play_sound_with_beep_server(sound.yobikomikun)
 
             dir_level = GPIO.HIGH if angle < 0 else GPIO.LOW
             GPIO.output(self.pin_ena, GPIO.HIGH)
@@ -92,6 +97,8 @@ def init(config):
                     count_curr += 1
                     pulse_count = 0
                     GPIO.output(self.pin_dir, dir_level if count_curr % 2 == 0 else (GPIO.HIGH if dir_level == GPIO.LOW else GPIO.LOW))
+                    if (not mute) and count_curr < move_count:
+                        sound.play_sound_with_beep_server(sound.mario_oneup)
                 # get status用
                 self.current_angle = abs(angle) * pulse_count / pulses_per_move if count_curr < move_count else abs(angle)
                 self.current_count = count_curr
@@ -100,8 +107,10 @@ def init(config):
             GPIO.output(self.pin_ena, GPIO.LOW)
             self.state = 'stopped'
             self.is_running = False
+            if not mute:
+                sound.play_sound_with_beep_server(sound.famima)
 
-        def move_start(self, direction, speed):
+        def move_start(self, direction, speed, mute):
             """
             # direction: 'L'/'R'
             # speed:'fast'/'slow'
@@ -111,7 +120,7 @@ def init(config):
                 dir_level = GPIO.LOW if direction == 'L' else GPIO.HIGH
                 speed_deg_per_min = self.config['move_rotation_speed_{}'.format(speed)]
                 self.is_moving = True
-                self.thread_move = threading.Thread(target=self._motor_thread_move, args=(dir_level, speed_deg_per_min))
+                self.thread_move = threading.Thread(target=self._motor_thread_move, args=(dir_level, speed_deg_per_min, mute))
                 self.thread_move.daemon = True
                 self.thread_move.start()
 
@@ -122,7 +131,7 @@ def init(config):
                 if self.thread_move:
                     self.thread_move.join(timeout=1)
 
-        def _motor_thread_move(self, dir_level, speed_deg_per_min):
+        def _motor_thread_move(self, dir_level, speed_deg_per_min, mute):
             motor_driver_rate = self.config['motor_driver_rate']
             gear_ratio = self.config['gear_ratio']
             pulse_interval_sec = (360 * 60 / 200) / (speed_deg_per_min * gear_ratio * motor_driver_rate)
@@ -131,6 +140,12 @@ def init(config):
             debug_print(pulse_width_sec)
             GPIO.output(self.pin_ena, GPIO.HIGH)
             GPIO.output(self.pin_dir, dir_level)
+
+            if not mute:
+                if dir_level == GPIO.LOW:
+                    sound.play_sound_with_beep_server(sound.tetorisu)
+                else:
+                    sound.play_sound_with_beep_server(sound.jidai)
 
             next_time = time.perf_counter() + pulse_interval_sec
             while self.is_moving:
@@ -142,6 +157,9 @@ def init(config):
 
             GPIO.output(self.pin_pul, GPIO.LOW)
             GPIO.output(self.pin_ena, GPIO.LOW)
+
+            if not mute:
+                sound.play_sound_with_beep_server(sound.sound_stop)
 
         def cleanup(self):
             self.run_stop()

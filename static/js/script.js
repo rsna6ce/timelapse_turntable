@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const timeH = parseInt(document.getElementById('time_h').value);
         const timeM = parseInt(document.getElementById('time_m').value);
         const moveCount = parseInt(document.getElementById('move_count').value);
+        const mute = document.getElementById('mute').checked; // チェックボックスの状態を取得
         const totalTimeMinutes = (timeH * 60 + timeM) * moveCount;
         const rotationSpeed = totalTimeMinutes > 0 ? (Math.abs(angle) * moveCount) / totalTimeMinutes : 0;
 
@@ -21,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 fetch('/start', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ angle, time_h: timeH, time_m: timeM, move_count: moveCount })
+                    body: JSON.stringify({ angle, time_h: timeH, time_m: timeM, move_count: moveCount, mute }) // mute を追加
                 });
                 startBtn.disabled = true;
                 stopBtn.disabled = false;
@@ -43,10 +44,11 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('mousedown', () => {
             const speed = btn === moveLeftFast || btn === moveRightFast ? 'fast' : 'slow';
             const direction = btn.id.includes('Left') ? 'L' : 'R';
+            const mute = document.getElementById('mute').checked;
             fetch('/move_start', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ speed, direction })
+                body: JSON.stringify({ speed, direction, mute })
             });
         });
         btn.addEventListener('mouseup', () => fetch('/move_stop', { method: 'POST' }));
@@ -54,10 +56,11 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const speed = btn === moveLeftFast || btn === moveRightFast ? 'fast' : 'slow';
             const direction = btn.id.includes('Left') ? 'L' : 'R';
+            const mute = document.getElementById('mute').checked;
             fetch('/move_start', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ speed, direction })
+                body: JSON.stringify({ speed, direction, mute})
             });
         });
         btn.addEventListener('touchend', () => fetch('/move_stop', { method: 'POST' }));

@@ -29,3 +29,8 @@
     background-color: #ffffff; /* 背景を親と同色に */
     border: 1px solid #ddd; /* 境界線を薄く */
 }
+
+/* タイトルを青に */
+.title-blue {
+    color: blue;
+}

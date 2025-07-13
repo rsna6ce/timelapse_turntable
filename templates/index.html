@@ -15,7 +15,7 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="text-center"><strong>TIMELAPSE ☆ TURNTABLE</strong></h1>
+        <h1 class="text-center title-blue"><strong>TIMELAPSE ★ TURNTABLE</strong></h1>
         <div class="card p-4 mb-4">
             <form id="controlForm">
                 <div class="mb-3">
@@ -33,6 +33,10 @@
                 <div class="mb-3">
                     <label for="move_count" class="form-label">Move Count</label>
                     <input type="number" class="form-control" id="move_count" name="move_count" min="1" value="{{latest_move_count}}" style="width:50%;">
+                </div>
+                <div class="mb-3">
+                    <input type="checkbox" id="mute" name="mute" class="form-check-input" {% if latest_mute %}checked{% endif %}>
+                    <label for="mute" class="form-check-label">Mute</label>
                 </div>
                 <button type="button" id="startBtn" class="btn btn-primary" style="width: 40%;">Start</button>
                 <button type="button" id="stopBtn" class="btn btn-primary" style="width: 40%;" disabled>Stop</button>
