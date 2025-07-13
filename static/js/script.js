@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Polling
     function pollStatus() {
+        setTimeout(pollStatus, 1000);
         fetch('/status')
             .then(response => response.json())
             .then(data => {
@@ -82,7 +83,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     startBtn.disabled = false;
                     stopBtn.disabled = true;
                 }
-                setTimeout(pollStatus, 1000);
             });
     }
 });

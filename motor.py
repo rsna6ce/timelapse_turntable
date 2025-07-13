@@ -72,7 +72,7 @@ def init(config):
                 print(f"設定エラー: {e}")
                 return
 
-            dir_level = GPIO.HIGH if angle >= 0 else GPIO.LOW
+            dir_level = GPIO.HIGH if angle < 0 else GPIO.LOW
             GPIO.output(self.pin_ena, GPIO.HIGH)
             GPIO.output(self.pin_dir, dir_level)
 
@@ -91,7 +91,7 @@ def init(config):
                 if pulse_count >= pulses_per_move:
                     count_curr += 1
                     pulse_count = 0
-                    GPIO.output(self.pin_dir, dir_level if count_curr % 2 == 0 else (GPIO.LOW if dir_level == GPIO.HIGH else GPIO.HIGH))
+                    GPIO.output(self.pin_dir, dir_level if count_curr % 2 == 0 else (GPIO.HIGH if dir_level == GPIO.LOW else GPIO.LOW))
                 # get status用
                 self.current_angle = abs(angle) * pulse_count / pulses_per_move if count_curr < move_count else abs(angle)
                 self.current_count = count_curr
@@ -108,7 +108,7 @@ def init(config):
             """
             if self.state == 'stopped':
                 self.state = 'moving'
-                dir_level = GPIO.HIGH if direction == 'L' else GPIO.LOW
+                dir_level = GPIO.LOW if direction == 'L' else GPIO.HIGH
                 speed_deg_per_min = self.config['move_rotation_speed_{}'.format(speed)]
                 self.is_moving = True
                 self.thread_move = threading.Thread(target=self._motor_thread_move, args=(dir_level, speed_deg_per_min))
