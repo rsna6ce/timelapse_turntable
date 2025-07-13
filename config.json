@@ -3,6 +3,6 @@
     "min_rotation_speed": 0.1,
     "move_rotation_speed_fast": 480,
     "move_rotation_speed_slow": 240,
-    "motor_driver_rate": 8,
+    "motor_driver_rate": 32,
     "gear_ratio": 27.6
 }
