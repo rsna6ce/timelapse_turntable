@@ -244,7 +244,7 @@ jidai = [
 (tone_re2*tone_sharp, len3/spd_jidai),#ミbー
 (tone_do2*tone_sharp, len4/spd_jidai),#レbー
 ]
-tetorisu.extend(jidai)
+jidai.extend(jidai)
 
 # マリオ1UP
 mario_oneup = [
