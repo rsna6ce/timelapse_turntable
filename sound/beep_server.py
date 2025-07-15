@@ -18,6 +18,7 @@ def play_melody_thread():
         data = q.get()
         sounds = data['sounds']
         delay = data['delay']
+        speed = data['speed']
         for sound in sounds:
             if not q.empty():
                 #cancel and play next sound
@@ -35,9 +36,9 @@ def play_melody_thread():
             else:
                 # no-sound silence
                 wiringpi.pwmWrite(OUTPIN,0)
-            time.sleep(time_ms/(1000))
+            time.sleep(time_ms/speed/(1000))
             wiringpi.pwmWrite(OUTPIN,0)
-            time.sleep(delay/1000)
+            time.sleep(delay/speed/1000)
 
 def main():
     #init device
@@ -61,7 +62,8 @@ def main():
             data = json.loads(json_data.decode('utf-8'))
             sounds = data.get('sounds',[(0,0)])
             delay = data.get('delay',20)
-            q.put({'sounds':sounds, 'delay':delay})
+            speed = data.get('speed',1.0)
+            q.put({'sounds':sounds, 'delay':delay, 'speed':speed})
         except:
             # ignore do nothing
             pass

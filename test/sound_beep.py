@@ -67,6 +67,126 @@ doremi_test= [
 (tone_do4, len3),
 ]
 
+# 通りゃんせ
+spd_touryanse=1.0
+touryanse=[
+(tone_mi2, len2/spd_touryanse),#ミー
+(tone_mi2, len2/spd_touryanse),#ミー
+(tone_re2, len2/spd_touryanse),#レー
+(tone_mi2, len2/spd_touryanse),#ミー
+(tone_mi2, len1/spd_touryanse),#ミ
+(tone_re2, len1/spd_touryanse),#レ
+(tone_si1, len2/spd_touryanse),#シー
+(0, len1),
+(tone_fa2, len2/spd_touryanse),#ファー
+(tone_fa2, len1/spd_touryanse),#ファ
+(tone_fa2, len1/spd_touryanse),#ファ
+(tone_ra2, len2/spd_touryanse),#ラー
+(tone_fa2, len1/spd_touryanse),#ファ
+(tone_mi2, len1/spd_touryanse),#ミ
+(tone_fa2, len1/spd_touryanse),#ファ
+(tone_mi2, len1/spd_touryanse),#ミ
+(tone_re2, len1/spd_touryanse),#レ
+(tone_re2, len1/spd_touryanse),#レ
+(tone_mi2, len2/spd_touryanse),#ミー
+(0, len1),
+(tone_fa2, len2/spd_touryanse),#ファー
+(tone_fa2, len2/spd_touryanse),#ファー
+(0, len1/2),
+(tone_ra2, len1/spd_touryanse),#ラ
+(tone_fa2, len1/spd_touryanse),#ファ
+(tone_mi2, len1/spd_touryanse),#ミ
+(tone_fa2, len1/spd_touryanse),#ファ
+(tone_mi2, len1/spd_touryanse),#ミ
+(tone_re2, len1/spd_touryanse),#レ
+(tone_re2, len1/spd_touryanse),#レ
+(tone_mi2, len2/spd_touryanse),#ミー
+(0, len1),
+(tone_do2, len2/spd_touryanse),#ドー
+(tone_do2, len1/spd_touryanse),#ド
+(tone_do2, len1/spd_touryanse),#ド
+(tone_mi2, len2/spd_touryanse),#ミー
+(tone_do2, len1/spd_touryanse),#ド
+(tone_si1, len1/spd_touryanse),#シ
+(tone_do2, len1/spd_touryanse),#ド
+(tone_si1, len1/spd_touryanse),#シ
+(tone_ra1, len1/spd_touryanse),#ラ
+(tone_ra1, len1/spd_touryanse),#ラ
+(tone_si1, len2/spd_touryanse),#シー
+(0, len1),
+(tone_do2, len1/spd_touryanse),#ド
+(tone_do2, len2/spd_touryanse),#ドー
+(tone_do2, len1/spd_touryanse),#ド
+(tone_mi2, len1/spd_touryanse),#ミ
+(tone_mi2, len1/spd_touryanse),#ミ
+(tone_do2, len1/spd_touryanse),#ド
+(tone_si1, len1/spd_touryanse),#シ
+(tone_do2, len1/spd_touryanse),#ド
+(tone_si1, len1/spd_touryanse),#シ
+(tone_ra1, len1/spd_touryanse),#ラ
+(tone_ra1, len1/spd_touryanse),#ラ
+(tone_si1, len2/spd_touryanse),#シー
+
+(tone_si2, len2/spd_touryanse),#シー
+(tone_fa2, len2/spd_touryanse),#ファー
+(tone_si2, len2/spd_touryanse),#シー
+(tone_fa2, len2/spd_touryanse),#ファー
+(tone_si2, len2/spd_touryanse),#シー
+(tone_fa2, len2/spd_touryanse),#ファー
+(tone_si2, len2/spd_touryanse),#シー
+(tone_fa2, len2/spd_touryanse),#ファー
+(0, len1),
+]
+
+# スモールワールド（今回のスピーカーは音域で鳴らせない）
+spd_small_world=1.0
+small_world = [
+(tone_si1, len1/spd_small_world),#シ
+(tone_do2, len1/spd_small_world),#ド
+(tone_re2, len2/spd_small_world),#レー
+(tone_si2, len2/spd_small_world),#シー
+(tone_so2, len2/spd_small_world),#ソー
+(tone_ra2, len1/spd_small_world),#ラ
+(tone_so2, len1/spd_small_world),#ソ
+(tone_so2, len2/spd_small_world),#ソー
+(tone_fa2*tone_sharp, len2/spd_small_world),#ファー#
+(tone_fa2*tone_sharp, len2/spd_small_world),#ファー#
+(0, len1/spd_small_world/2),
+(tone_ra1, len1/spd_small_world),#ラ
+(tone_si1, len1/spd_small_world),#シ
+(tone_do2, len2/spd_small_world),#ドー
+(tone_ra2, len2/spd_small_world),#ラー
+(tone_fa2*tone_sharp, len2/spd_small_world),#ファー#
+(tone_so2, len1/spd_small_world),#ソ
+(tone_fa2*tone_sharp, len1/spd_small_world),#ファ#
+(tone_mi2, len2/spd_small_world),#ミー
+(tone_re2, len2/spd_small_world),#レー
+(tone_re2, len2/spd_small_world),#レー
+(0, len1/spd_small_world/2),
+(tone_si1, len1/spd_small_world),#シ
+(tone_do2, len1/spd_small_world),#ド
+(tone_re2, len2/spd_small_world),#レー
+(tone_so2, len1/spd_small_world),#ソ
+(tone_ra2, len1/spd_small_world),#ラ
+(tone_si2, len2/spd_small_world),#シー
+(tone_ra2, len1/spd_small_world),#ラ
+(tone_so2, len1/spd_small_world),#ソ
+(tone_mi2, len2/spd_small_world),#ミー
+(tone_ra2, len1/spd_small_world),#ラ
+(tone_si2, len1/spd_small_world),#シ
+(tone_do3, len2/spd_small_world),#ドー
+(tone_si2, len1/spd_small_world),#シ
+(tone_ra2, len1/spd_small_world),#ラ
+(tone_re2, len2/spd_small_world),#レー
+(tone_do3, len2/spd_small_world),#ドー
+(tone_si2, len2/spd_small_world),#シー
+(tone_ra2, len2/spd_small_world),#ラー
+(tone_so2, len2/spd_small_world),#ソー
+(0, len1/spd_small_world),
+]
+small_world.extend(small_world)
+
+
 spd_i=1.0
 iphone = [
 (tone_so1, len2/spd_i),#ソー
@@ -274,9 +394,9 @@ mario_oneup = [
 (tone_so3, len1/2)
 ]
 
-def play_sound_with_beep_server(sounds, delay):
+def play_sound_with_beep_server(sounds, delay=len1, speed=1.0):
     sock_info = ('127.0.0.1', PORT_BEEP_SERVER)
-    data = { 'sounds': sounds, 'delay':delay }
+    data = { 'sounds': sounds, 'delay':delay, 'speed':speed }
     json_data = json.dumps(data).encode('utf-8')
     sock_fo_beep_server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock_fo_beep_server.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
@@ -286,7 +406,8 @@ def play_sound_with_beep_server(sounds, delay):
 #play_sound_with_beep_server(mario_oneup, len0)
 #play_sound_with_beep_server(jidai, len0)
 #play_sound_with_beep_server(famima, len0)
-play_sound_with_beep_server(yobikomikun, len0)
+#play_sound_with_beep_server(yobikomikun, len0)
 #play_sound_with_beep_server(tetorisu, len0)
 #play_sound_with_beep_server(iphone, len0)
 #play_sound_with_beep_server(doremi_test, len0)
+play_sound_with_beep_server(touryanse, len0,1.0)

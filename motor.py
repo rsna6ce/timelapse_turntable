@@ -141,11 +141,15 @@ def init(config):
             GPIO.output(self.pin_ena, GPIO.HIGH)
             GPIO.output(self.pin_dir, dir_level)
 
+            sound_speed = 1.0
+            if self.config['move_rotation_speed_fast'] == speed_deg_per_min:
+                sound_speed = 1.3
+
             if not mute:
                 if dir_level == GPIO.LOW:
-                    sound.play_sound_with_beep_server(sound.tetorisu)
+                    sound.play_sound_with_beep_server(sound.tetorisu, sound.len0, sound_speed)
                 else:
-                    sound.play_sound_with_beep_server(sound.jidai)
+                    sound.play_sound_with_beep_server(sound.touryanse, sound.len0, sound_speed)
 
             next_time = time.perf_counter() + pulse_interval_sec
             while self.is_moving:
