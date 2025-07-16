@@ -374,6 +374,23 @@ mario_oneup = [
 (tone_so3, len1/2)
 ]
 
+# スーパーマリオマリオ
+mario_start = [
+(tone_mi2, len1/2),
+(0, len1/10),
+(tone_mi2, len1/2),
+(0, len1/1.5),
+(tone_mi2, len1),
+(0, len1/2),
+(tone_do2, len1/2),
+(0, len1/10),
+(tone_mi2, len1/2),
+(0, len1),
+(tone_so2, len1),
+(0, len2),
+(tone_so1, len1),
+]
+
 def play_sound_with_beep_server(sounds, delay=len0, speed=1.0):
     sock_info = ('127.0.0.1', PORT_BEEP_SERVER)
     data = { 'sounds': sounds, 'delay':delay, 'speed':speed }

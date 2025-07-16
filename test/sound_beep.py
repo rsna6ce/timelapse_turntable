@@ -394,6 +394,22 @@ mario_oneup = [
 (tone_so3, len1/2)
 ]
 
+mario_start = [
+(tone_mi2, len1/2),
+(0, len1/10),
+(tone_mi2, len1/2),
+(0, len1/1.5),
+(tone_mi2, len1),
+(0, len1/2),
+(tone_do2, len1/2),
+(0, len1/10),
+(tone_mi2, len1/2),
+(0, len1),
+(tone_so2, len1),
+(0, len2),
+(tone_so1, len1),
+]
+
 def play_sound_with_beep_server(sounds, delay=len1, speed=1.0):
     sock_info = ('127.0.0.1', PORT_BEEP_SERVER)
     data = { 'sounds': sounds, 'delay':delay, 'speed':speed }
@@ -410,4 +426,5 @@ def play_sound_with_beep_server(sounds, delay=len1, speed=1.0):
 #play_sound_with_beep_server(tetorisu, len0)
 #play_sound_with_beep_server(iphone, len0)
 #play_sound_with_beep_server(doremi_test, len0)
-play_sound_with_beep_server(touryanse, len0,1.0)
+#play_sound_with_beep_server(touryanse, len0,1.0)
+play_sound_with_beep_server(mario_start, len0,1.0)

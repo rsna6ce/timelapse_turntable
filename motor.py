@@ -38,6 +38,7 @@ def init(config):
             self.is_moving = False
             self.current_angle = 0
             self.current_count = 0
+            sound.play_sound_with_beep_server(sound.mario_start)
 
         def run_start(self, angle, time_h, time_m, move_count, mute):
             if self.state == 'stopped':
